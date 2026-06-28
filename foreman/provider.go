@@ -211,6 +211,7 @@ func Provider() *schema.Provider {
 			"foreman_webhooktemplate":               resourceForemanWebhookTemplate(),
 			"foreman_organization":                  resourceForemanOrganization(),
 			"foreman_location":                      resourceForemanLocation(),
+			"foreman_config_group":                  resourceForemanConfigGroup(),
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
@@ -248,6 +249,7 @@ func Provider() *schema.Provider {
 			"foreman_templateinput":                 dataSourceForemanTemplateInput(),
 			"foreman_organization":                  dataSourceForemanOrganization(),
 			"foreman_location":                      dataSourceForemanLocation(),
+			"foreman_config_group":                  dataSourceForemanConfigGroup(),
 		},
 		ConfigureContextFunc: providerConfigure,
 	}
