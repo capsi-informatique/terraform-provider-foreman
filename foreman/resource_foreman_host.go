@@ -571,6 +571,20 @@ func resourceForemanHost() *schema.Resource {
 				ValidateFunc: validation.IntAtLeast(0),
 				Description:  "ID of the hostgroup to assign to the host.",
 			},
+			"location_id": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.IntAtLeast(0),
+				Description:  "ID of the location to assign to the host.",
+			},
+			"organization_id": {
+				Type:         schema.TypeInt,
+				Optional:     true,
+				Computed:     true,
+				ValidateFunc: validation.IntAtLeast(0),
+				Description:  "ID of the organization to assign to the host.",
+			},
 			"image_id": {
 				Type:         schema.TypeInt,
 				Optional:     true,
@@ -898,6 +912,16 @@ func buildForemanHost(d *schema.ResourceData) *api.ForemanHost {
 	if computeProfileId != 0 {
 		host.ComputeProfileId = &computeProfileId
 	}
+
+	locationId := d.Get("location_id").(int)
+	if locationId != 0 {
+		host.LocationId = &locationId
+	}
+	organizationId := d.Get("organization_id").(int)
+	if organizationId != 0 {
+		host.OrganizationId = &organizationId
+	}
+
 	computeAttributes := expandComputeAttributes(d.Get("compute_attributes").(string))
 	if len(computeAttributes) > 0 {
 		host.ComputeAttributes = computeAttributes
@@ -1126,6 +1150,8 @@ func setResourceDataFromForemanHost(d *schema.ResourceData, fh *api.ForemanHost)
 	d.Set("puppet_class_ids", fh.PuppetClassIds)
 	d.Set("config_group_ids", fh.ConfigGroupIds)
 	d.Set("token", fh.Token)
+	d.Set("location_id", fh.LocationId)
+	d.Set("organization_id", fh.OrganizationId)
 
 	return setResourceDataFromForemanInterfacesAttributes(d, fh)
 }

@@ -47,12 +47,14 @@ The following arguments are supported:
 	- `type` The type of interface. Values include: `"interface"`, `"bmc"`, `"bond"`, `"bridge"`
 	- `bmc_provider` Provider used for BMC/IMPI functionality. Values include: `"IPMI"`
 	- `domain_id` Foreman domain ID of interface
+- `location_id` - (Optional) ID of the location to assign to the host.
 - `manage_power_operations` - (Optional) Manage power operations, e.g. power on, if host's build flag will be enabled.
 - `managed` - (Optional) Whether or not this host is managed by Foreman. Create host only, don't set build status or manage power states.
 - `medium_id` - (Optional, Force New) ID of the medium mounted on the host.
 - `model_id` - (Optional) ID of the hardware model if applicable
 - `name` - (Optional) Name of this host as stored in Foreman. Can be short name or FQDN, depending on your Foreman settings (especially the setting 'append_domain_name_for_hosts').
 - `operatingsystem_id` - (Optional, Force New) ID of the operating system to put on the host.
+- `organization_id` - (Optional) ID of the organization to assign to the host.
 - `owner_id` - (Optional) ID of the user or usergroup that owns the host.
 - `owner_type` - (Optional) Owner of the host, must be either User ot Usergroup
 - `parameters` - (Optional) A map of parameters that will be saved as host parameters in the machine config.
@@ -100,12 +102,14 @@ The following attributes are exported:
 	- `type` The type of interface. Values include: `"interface"`, `"bmc"`, `"bond"`, `"bridge"`
 	- `bmc_provider` Provider used for BMC/IMPI functionality. Values include: `"IPMI"`
 	- `domain_id` Foreman domain ID of interface
+- `location_id` - ID of the location to assign to the host.
 - `manage_power_operations` - Manage power operations, e.g. power on, if host's build flag will be enabled.
 - `managed` - Whether or not this host is managed by Foreman. Create host only, don't set build status or manage power states.
 - `medium_id` - ID of the medium mounted on the host.
 - `model_id` - ID of the hardware model if applicable
 - `name` - Name of this host as stored in Foreman. Can be short name or FQDN, depending on your Foreman settings (especially the setting 'append_domain_name_for_hosts').
 - `operatingsystem_id` - ID of the operating system to put on the host.
+- `organization_id` - ID of the organization to assign to the host.
 - `owner_id` - ID of the user or usergroup that owns the host.
 - `owner_type` - Owner of the host, must be either User ot Usergroup
 - `parameters` - A map of parameters that will be saved as host parameters in the machine config.

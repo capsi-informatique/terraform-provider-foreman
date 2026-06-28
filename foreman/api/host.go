@@ -123,6 +123,10 @@ type ForemanHost struct {
 	PuppetAttributes PuppetAttribute `json:"puppet_attributes"`
 	// Default Root Password for this host (on creation)
 	RootPassword string `json:"root_pass,omitempty"`
+	// ID of the location to assign the host
+	LocationId *int `json:"location_id,omitempty"`
+	// ID of the organization to assign the host
+	OrganizationId *int `json:"organization_id,omitempty"`
 }
 
 func (fh *ForemanHost) isBuilt() bool {
@@ -258,6 +262,23 @@ func (c *Client) SendPowerCommand(ctx context.Context, h *ForemanHost, cmd inter
 	return nil
 }
 
+// wrapHostJSON wraps a ForemanHost as JSON without top-level taxonomy scoping.
+// Top-level location_id/organization_id restrict the host lookup by ID on PUT
+// requests, causing 404 when the host is being moved between taxonomies.
+// Instead, location/org are assigned via the host object itself. The client
+// config values are used as a fallback when not set on the host.
+func (c *Client) wrapHostJSON(h *ForemanHost) ([]byte, error) {
+	if h.LocationId == nil && c.clientConfig.LocationID > 0 {
+		locId := c.clientConfig.LocationID
+		h.LocationId = &locId
+	}
+	if h.OrganizationId == nil && c.clientConfig.OrganizationID > 0 {
+		orgId := c.clientConfig.OrganizationID
+		h.OrganizationId = &orgId
+	}
+	return c.WrapJSON("host", h)
+}
+
 // -----------------------------------------------------------------------------
 // CRUD Implementation
 // -----------------------------------------------------------------------------
@@ -271,7 +292,7 @@ func (c *Client) CreateHost(ctx context.Context, h *ForemanHost, retryCount int)
 
 	reqEndpoint := fmt.Sprintf("/%s", HostEndpointPrefix)
 
-	hJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("host", h)
+	hJSONBytes, jsonEncErr := c.wrapHostJSON(h)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
@@ -374,7 +395,7 @@ func (c *Client) UpdateHost(ctx context.Context, h *ForemanHost, retryCount int)
 
 	reqEndpoint := fmt.Sprintf("/%s/%d", HostEndpointPrefix, h.Id)
 
-	hJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("host", h)
+	hJSONBytes, jsonEncErr := c.wrapHostJSON(h)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
