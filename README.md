@@ -1,5 +1,7 @@
 # Foreman Terraform Provider
 
+> **Note:** This repository is a fork of [terraform-coop/terraform-provider-foreman](https://github.com/terraform-coop/terraform-provider-foreman) aimed at supporting new features and the latest versions of Foreman. Maintenance and support are not guaranteed.
+
 Terraform provider to interact with [Foreman](https://www.theforeman.org/)
 and, partly, [Katello](https://theforeman.org/plugins/katello/).
 
