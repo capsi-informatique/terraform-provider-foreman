@@ -81,6 +81,10 @@ type ForemanHostgroup struct {
 	HostGroupParameters []ForemanKVParameter `json:"group_parameters_attributes,omitempty"`
 	// The puppetattributes object is only used for create and update, it's not populated on read, hence the duplication
 	PuppetAttributes PuppetAttribute `json:"puppet_attributes"`
+	// IDs of the locations associated with this hostgroup
+	LocationIds []int `json:"location_ids,omitempty"`
+	// IDs of the organizations associated with this hostgroup
+	OrganizationIds []int `json:"organization_ids,omitempty"`
 }
 
 // Foreman Hostgroup struct used for JSON decode.  Foreman API returns the ids
@@ -91,6 +95,8 @@ type foremanHostGroupDecode struct {
 	PuppetClassesDecode       []ForemanObject      `json:"puppetclasses"`
 	ConfigGroupsDecode        []ForemanObject      `json:"config_groups"`
 	HostGroupParametersDecode []ForemanKVParameter `json:"parameters,omitempty"`
+	Locations                 []EntityResponse     `json:"locations,omitempty"`
+	Organizations             []EntityResponse     `json:"organizations,omitempty"`
 }
 
 // -----------------------------------------------------------------------------
@@ -106,7 +112,7 @@ func (c *Client) CreateHostgroup(ctx context.Context, h *ForemanHostgroup) (*For
 
 	reqEndpoint := fmt.Sprintf("/%s", HostgroupEndpointPrefix)
 
-	hJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("hostgroup", h)
+	hJSONBytes, jsonEncErr := c.WrapJSON("hostgroup", h)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
@@ -161,6 +167,18 @@ func (c *Client) ReadHostgroup(ctx context.Context, id int) (*ForemanHostgroup, 
 	readHostgroup.ConfigGroupIds = foremanObjectArrayToIdIntArray(readHostgroup.ConfigGroupsDecode)
 	readHostgroup.HostGroupParameters = readHostgroup.HostGroupParametersDecode
 
+	locationIDs := make([]int, 0, len(readHostgroup.Locations))
+	for _, loc := range readHostgroup.Locations {
+		locationIDs = append(locationIDs, loc.ID)
+	}
+	readHostgroup.LocationIds = locationIDs
+
+	organizationIDs := make([]int, 0, len(readHostgroup.Organizations))
+	for _, org := range readHostgroup.Organizations {
+		organizationIDs = append(organizationIDs, org.ID)
+	}
+	readHostgroup.OrganizationIds = organizationIDs
+
 	log.Debugf("readHostgroup: [%+v]", readHostgroup)
 
 	return &readHostgroup.ForemanHostgroup, nil
@@ -205,7 +223,7 @@ func (c *Client) UpdateHostgroup(ctx context.Context, h *ForemanHostgroup) (*For
 
 	reqEndpoint := fmt.Sprintf("/%s/%d", HostgroupEndpointPrefix, h.Id)
 
-	hJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("hostgroup", h)
+	hJSONBytes, jsonEncErr := c.WrapJSON("hostgroup", h)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
@@ -231,6 +249,18 @@ func (c *Client) UpdateHostgroup(ctx context.Context, h *ForemanHostgroup) (*For
 	updatedHostgroup.PuppetClassIds = foremanObjectArrayToIdIntArray(updatedHostgroup.PuppetClassesDecode)
 	updatedHostgroup.ConfigGroupIds = foremanObjectArrayToIdIntArray(updatedHostgroup.ConfigGroupsDecode)
 	updatedHostgroup.HostGroupParameters = updatedHostgroup.HostGroupParametersDecode
+
+	locationIDs := make([]int, 0, len(updatedHostgroup.Locations))
+	for _, loc := range updatedHostgroup.Locations {
+		locationIDs = append(locationIDs, loc.ID)
+	}
+	updatedHostgroup.LocationIds = locationIDs
+
+	organizationIDs := make([]int, 0, len(updatedHostgroup.Organizations))
+	for _, org := range updatedHostgroup.Organizations {
+		organizationIDs = append(organizationIDs, org.ID)
+	}
+	updatedHostgroup.OrganizationIds = organizationIDs
 
 	log.Debugf("updatedHostgroup: [%+v]", updatedHostgroup)
 

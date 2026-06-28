@@ -35,9 +35,11 @@ The following attributes are exported:
 - `domain_id` - ID of the domain associated with this hostgroup.
 - `environment_id` - ID of the environment associated with this hostgroup.
 - `lifecycle_environment_id` - ID of the lifecycle environment associated with this hostgroup.
+- `location_ids` - IDs of the locations associated with this hostgroup.
 - `medium_id` - ID of the media associated with this hostgroup.
 - `name` - Hostgroup name.
 - `operatingsystem_id` - ID of the operating system associated with this hostgroup.
+- `organization_ids` - IDs of the organizations associated with this hostgroup.
 - `parameters` - A map of parameters that will be saved as hostgroup parameters in the group config.
 - `parent_id` - ID of the parent hostgroup.
 - `ptable_id` - ID of the partition table associated with this hostgroup.

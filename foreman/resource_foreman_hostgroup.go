@@ -237,6 +237,26 @@ func resourceForemanHostgroup() *schema.Resource {
 				ValidateFunc: validation.IntAtLeast(0),
 				Description:  "ID of the subnet associated with the hostgroup.",
 			},
+
+			"location_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "IDs of the locations associated with this hostgroup.",
+			},
+
+			"organization_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "IDs of the organizations associated with this hostgroup.",
+			},
 		},
 	}
 }
@@ -349,6 +369,16 @@ func buildForemanHostgroup(d *schema.ResourceData) *api.ForemanHostgroup {
 		hostgroup.HostGroupParameters = api.ToKV(attr.(map[string]interface{}))
 	}
 
+	if attr, ok = d.GetOk("location_ids"); ok {
+		attrSet := attr.(*schema.Set)
+		hostgroup.LocationIds = conv.InterfaceSliceToIntSlice(attrSet.List())
+	}
+
+	if attr, ok = d.GetOk("organization_ids"); ok {
+		attrSet := attr.(*schema.Set)
+		hostgroup.OrganizationIds = conv.InterfaceSliceToIntSlice(attrSet.List())
+	}
+
 	return &hostgroup
 }
 
@@ -380,6 +410,8 @@ func setResourceDataFromForemanHostgroup(d *schema.ResourceData, fh *api.Foreman
 	d.Set("puppet_proxy_id", fh.PuppetProxyId)
 	d.Set("realm_id", fh.RealmId)
 	d.Set("subnet_id", fh.SubnetId)
+	d.Set("location_ids", fh.LocationIds)
+	d.Set("organization_ids", fh.OrganizationIds)
 }
 
 // -----------------------------------------------------------------------------
