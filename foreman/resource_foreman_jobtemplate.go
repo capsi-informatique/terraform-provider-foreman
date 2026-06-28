@@ -41,7 +41,7 @@ func resourceForemanJobTemplate() *schema.Resource {
 			"name": {
 				Type:        schema.TypeString,
 				Required:    true,
-				ForceNew:    true,
+				ForceNew:    false,
 				Description: "The name of the job template",
 			},
 
@@ -89,7 +89,7 @@ func resourceForemanJobTemplate() *schema.Resource {
 
 			"template_inputs": {
 				Optional: true,
-				ForceNew: true,
+				ForceNew: false,
 				Type:     schema.TypeList,
 				Elem:     resourceForemanTemplateInput(),
 			},

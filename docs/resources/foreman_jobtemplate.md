@@ -22,11 +22,11 @@ The following arguments are supported:
 - `description_format` - (Optional) 
 - `job_category` - (Required) 
 - `locked` - (Optional) 
-- `name` - (Required, Force New) The name of the job template
+- `name` - (Required) The name of the job template
 - `provider_type` - (Optional) 
 - `snippet` - (Optional) 
 - `template` - (Required) The template content itself
-- `template_inputs` - (Optional, Force New) 
+- `template_inputs` - (Optional) 
 
 
 ## Attributes Reference

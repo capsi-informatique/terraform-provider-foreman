@@ -25,10 +25,10 @@ The following arguments are supported:
 - `compute_profile_id` - (Optional) 
 - `compute_resource_id` - (Optional, Force New) 
 - `config_group_ids` - (Optional) IDs of the applied config groups.
-- `domain_id` - (Optional, Force New) ID of the domain to assign to the host.
+- `domain_id` - (Optional) ID of the domain to assign to the host.
 - `enable_bmc` - (Optional) Enables PMI/BMC functionality. On create and update calls, having this enabled will force a host to poweroff, set next boot to PXE and power on. Defaults to `false`.
 - `environment_id` - (Optional) ID of the environment to assign to the host.
-- `hostgroup_id` - (Optional, Force New) ID of the hostgroup to assign to the host.
+- `hostgroup_id` - (Optional) ID of the hostgroup to assign to the host.
 - `image_id` - (Optional, Force New) ID of an image to be used as base for this host when cloning
 - `interfaces_attributes` - (Optional) Host interface information (ususally set by Foreman or the hypervisor). One 'interfaces_attributes' block for each interface. It's a map[string] representation with the following subfields supported:
 	- `primary` Whether or not this is the primary interface
@@ -51,7 +51,7 @@ The following arguments are supported:
 - `managed` - (Optional) Whether or not this host is managed by Foreman. Create host only, don't set build status or manage power states.
 - `medium_id` - (Optional, Force New) ID of the medium mounted on the host.
 - `model_id` - (Optional) ID of the hardware model if applicable
-- `name` - (Optional, Force New) Name of this host as stored in Foreman. Can be short name or FQDN, depending on your Foreman settings (especially the setting 'append_domain_name_for_hosts').
+- `name` - (Optional) Name of this host as stored in Foreman. Can be short name or FQDN, depending on your Foreman settings (especially the setting 'append_domain_name_for_hosts').
 - `operatingsystem_id` - (Optional, Force New) ID of the operating system to put on the host.
 - `owner_id` - (Optional) ID of the user or usergroup that owns the host.
 - `owner_type` - (Optional) Owner of the host, must be either User ot Usergroup
@@ -62,7 +62,7 @@ The following arguments are supported:
 - `retry_count` - (Optional) Number of times to retry on a failed attempt to register or delete a host in foreman.
 - `root_password` - (Optional) Default root password
 - `set_build_flag` - (Optional) Sets the Foreman-internal 'build' flag on this host - even if it is already built completely.
-- `shortname` - (Optional, Force New) The short name of this host. Example: when the FQDN is 'host01.example.org', then 'host01' is the short name.
+- `shortname` - (Optional) The short name of this host. Example: when the FQDN is 'host01.example.org', then 'host01' is the short name.
 - `subnet_id` - (Optional) ID of the subnet the host should be placed in
 
 
