@@ -34,6 +34,18 @@ type ForemanSmartProxy struct {
 
 	// Uniform resource locator of the proxy (ie: https://server:8008)
 	URL string `json:"url"`
+	// IDs of the locations associated with this smart proxy
+	LocationIds []int `json:"location_ids,omitempty"`
+	// IDs of the organizations associated with this smart proxy
+	OrganizationIds []int `json:"organization_ids,omitempty"`
+}
+
+// foremanSmartProxyDecode is used for JSON decode since the API returns
+// locations and organizations as arrays of objects, not IDs.
+type foremanSmartProxyDecode struct {
+	ForemanSmartProxy
+	Locations     []EntityResponse `json:"locations,omitempty"`
+	Organizations []EntityResponse `json:"organizations,omitempty"`
 }
 
 // -----------------------------------------------------------------------------
@@ -49,7 +61,7 @@ func (c *Client) CreateSmartProxy(ctx context.Context, s *ForemanSmartProxy) (*F
 
 	reqEndpoint := fmt.Sprintf("/%s", SmartProxyEndpointPrefix)
 
-	sJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("smart_proxy", s)
+	sJSONBytes, jsonEncErr := c.WrapJSON("smart_proxy", s)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
@@ -66,15 +78,18 @@ func (c *Client) CreateSmartProxy(ctx context.Context, s *ForemanSmartProxy) (*F
 		return nil, reqErr
 	}
 
-	var createdSmartProxy ForemanSmartProxy
+	var createdSmartProxy foremanSmartProxyDecode
 	sendErr := c.SendAndParse(req, &createdSmartProxy)
 	if sendErr != nil {
 		return nil, sendErr
 	}
 
+	createdSmartProxy.LocationIds = entityResponseToIdIntArray(createdSmartProxy.Locations)
+	createdSmartProxy.OrganizationIds = entityResponseToIdIntArray(createdSmartProxy.Organizations)
+
 	log.Debugf("createdSmartProxy: [%+v]", createdSmartProxy)
 
-	return &createdSmartProxy, nil
+	return &createdSmartProxy.ForemanSmartProxy, nil
 }
 
 // ReadSmartProxy reads the attributes of a ForemanSmartProxy identified by the
@@ -94,15 +109,18 @@ func (c *Client) ReadSmartProxy(ctx context.Context, id int) (*ForemanSmartProxy
 		return nil, reqErr
 	}
 
-	var readSmartProxy ForemanSmartProxy
+	var readSmartProxy foremanSmartProxyDecode
 	sendErr := c.SendAndParse(req, &readSmartProxy)
 	if sendErr != nil {
 		return nil, sendErr
 	}
 
+	readSmartProxy.LocationIds = entityResponseToIdIntArray(readSmartProxy.Locations)
+	readSmartProxy.OrganizationIds = entityResponseToIdIntArray(readSmartProxy.Organizations)
+
 	log.Debugf("readSmartProxy: [%+v]", readSmartProxy)
 
-	return &readSmartProxy, nil
+	return &readSmartProxy.ForemanSmartProxy, nil
 }
 
 // UpdateSmartProxy updates a ForemanSmartProxy's attributes.  The smart proxy
@@ -114,7 +132,7 @@ func (c *Client) UpdateSmartProxy(ctx context.Context, s *ForemanSmartProxy) (*F
 
 	reqEndpoint := fmt.Sprintf("/%s/%d", SmartProxyEndpointPrefix, s.Id)
 
-	sJSONBytes, jsonEncErr := c.WrapJSONWithTaxonomy("smart_proxy", s)
+	sJSONBytes, jsonEncErr := c.WrapJSON("smart_proxy", s)
 	if jsonEncErr != nil {
 		return nil, jsonEncErr
 	}
@@ -131,15 +149,18 @@ func (c *Client) UpdateSmartProxy(ctx context.Context, s *ForemanSmartProxy) (*F
 		return nil, reqErr
 	}
 
-	var updatedSmartProxy ForemanSmartProxy
+	var updatedSmartProxy foremanSmartProxyDecode
 	sendErr := c.SendAndParse(req, &updatedSmartProxy)
 	if sendErr != nil {
 		return nil, sendErr
 	}
 
+	updatedSmartProxy.LocationIds = entityResponseToIdIntArray(updatedSmartProxy.Locations)
+	updatedSmartProxy.OrganizationIds = entityResponseToIdIntArray(updatedSmartProxy.Organizations)
+
 	log.Debugf("updatedSmartProxy: [%+v]", updatedSmartProxy)
 
-	return &updatedSmartProxy, nil
+	return &updatedSmartProxy.ForemanSmartProxy, nil
 }
 
 // DeleteSmartProxy deletes the ForemanSmartProxy identified by the supplied ID

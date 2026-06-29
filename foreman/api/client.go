@@ -213,8 +213,6 @@ func ToKV(m map[string]interface{}) []ForemanKVParameter {
 	return ret
 }
 
-
-
 // NewClient creates a new instance of the REST client for communication with
 // the API gateway.
 func NewClient(s Server, c ClientCredentials, cfg ClientConfig) *Client {
@@ -570,8 +568,11 @@ func (client *Client) WrapJSONWithTaxonomy(name interface{}, item interface{}) (
 		return nil, err
 	}
 
-	// Workaround for Foreman versions < 1.21 in case no default location/organization was defined for resources
-	if client.clientConfig.LocationID >= 0 && client.clientConfig.OrganizationID >= 0 {
+	// Workaround for Foreman versions < 1.21 in case no default location/organization was defined for resources.
+	// Only send taxonomy IDs when explicitly configured (> 0); 0 means "not set" and sending it causes
+	// Foreman to reject requests with "Location/Organization with id 0 not found".
+	// Use a value < 0 to explicitly disable taxonomy injection (for Foreman < 1.21 without taxonomy).
+	if client.clientConfig.LocationID > 0 && client.clientConfig.OrganizationID > 0 {
 		wrapped["location_id"] = client.clientConfig.LocationID
 		wrapped["organization_id"] = client.clientConfig.OrganizationID
 		log.Debugf("client.go#WrapJSONWithTaxonomy: item %+v", wrapped)

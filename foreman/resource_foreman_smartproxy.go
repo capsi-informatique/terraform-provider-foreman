@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/HanseMerkur/terraform-provider-utils/autodoc"
+	"github.com/HanseMerkur/terraform-provider-utils/conv"
 	"github.com/HanseMerkur/terraform-provider-utils/log"
 	"github.com/terraform-coop/terraform-provider-foreman/foreman/api"
 
@@ -60,6 +61,26 @@ func resourceForemanSmartProxy() *schema.Resource {
 					autodoc.MetaExample,
 				),
 			},
+
+			"location_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "IDs of the locations associated with this smart proxy.",
+			},
+
+			"organization_ids": {
+				Type:     schema.TypeSet,
+				Optional: true,
+				Computed: true,
+				Elem: &schema.Schema{
+					Type: schema.TypeInt,
+				},
+				Description: "IDs of the organizations associated with this smart proxy.",
+			},
 		},
 	}
 }
@@ -82,6 +103,15 @@ func buildForemanSmartProxy(d *schema.ResourceData) *api.ForemanSmartProxy {
 
 	proxy.URL = d.Get("url").(string)
 
+	if attr, ok := d.GetOk("location_ids"); ok {
+		attrSet := attr.(*schema.Set)
+		proxy.LocationIds = conv.InterfaceSliceToIntSlice(attrSet.List())
+	}
+	if attr, ok := d.GetOk("organization_ids"); ok {
+		attrSet := attr.(*schema.Set)
+		proxy.OrganizationIds = conv.InterfaceSliceToIntSlice(attrSet.List())
+	}
+
 	return &proxy
 }
 
@@ -93,6 +123,8 @@ func setResourceDataFromForemanSmartProxy(d *schema.ResourceData, fp *api.Forema
 	d.SetId(strconv.Itoa(fp.Id))
 	d.Set("name", fp.Name)
 	d.Set("url", fp.URL)
+	d.Set("location_ids", fp.LocationIds)
+	d.Set("organization_ids", fp.OrganizationIds)
 }
 
 // -----------------------------------------------------------------------------

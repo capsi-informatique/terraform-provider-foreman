@@ -26,6 +26,8 @@ The following arguments are supported:
 
 The following attributes are exported:
 
+- `location_ids` - IDs of the locations associated with this smart proxy.
 - `name` - The name of the smart proxy.
+- `organization_ids` - IDs of the organizations associated with this smart proxy.
 - `url` - Uniform resource locator of the proxy.
 

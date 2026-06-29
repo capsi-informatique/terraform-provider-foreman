@@ -66,6 +66,16 @@ func foremanObjectArrayToIdIntArray(foa []ForemanObject) []int {
 	return intArr
 }
 
+// entityResponseToIdIntArray converts an array of EntityResponse structs to
+// an array of integer IDs.
+func entityResponseToIdIntArray(entities []EntityResponse) []int {
+	ids := make([]int, 0, len(entities))
+	for _, e := range entities {
+		ids = append(ids, e.ID)
+	}
+	return ids
+}
+
 // unmarshalInteger is used to grab a clean copy of the integer from the
 // interface{} inside the JSON map. For some reason a simple integer conversion
 // does not do the trick here.
