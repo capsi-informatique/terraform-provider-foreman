@@ -96,8 +96,6 @@ nav:
     - 'foreman_webhook': 'resources/foreman_webhook.md'
     - 'foreman_webhooktemplate': 'resources/foreman_webhooktemplate.md'
 
-
-
 # ------------------------------------------------------------------------------
 # Build Directories
 # ------------------------------------------------------------------------------
